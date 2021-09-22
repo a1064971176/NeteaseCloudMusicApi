@@ -6,10 +6,12 @@ module.exports = async (query, request) => {
   query.cookie.os = 'pc'
   const data = {
     phone: query.phone,
-    countrycode: query.countrycode,
-    password:
-      query.md5_password ||
-      crypto.createHash('md5').update(query.password).digest('hex'),
+    countrycode: query.countrycode || '86',
+    captcha: query.captcha,
+    [query.captcha ? 'captcha' : 'password']: query.captcha
+      ? query.captcha
+      : query.md5_password ||
+        crypto.createHash('md5').update(query.password).digest('hex'),
     rememberLogin: 'true',
   }
   let result = await request(
